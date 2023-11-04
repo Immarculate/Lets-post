@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     Form,
     FormControl,
@@ -18,17 +18,20 @@ import { z } from "zod";
 import Loader from '@/components/shared/Loader';
 // import { createUserAccount } from '@/lib/appwrite/api';
 import { useToast } from "@/components/ui/use-toast"
-import { useCreateUserAccount, userSignInAccount } from '@/lib/react-query/queriesandmutations';
+import { useCreateUserAccount, useSignInAccount } from '@/lib/react-query/queriesandmutations';
+import { useUserContext } from '@/context/authContext';
 
 
 
 const SignupForm = () => {
     // const isLoading = false;
     const { toast } = useToast()
+    const navigate = useNavigate();
+    const { checkAuthUser, isLoading, isUserLoading } = useUserContext();
 
-    const { mutateAsync: createUserAccount, isLoading: isCreatingUser } = useCreateUserAccount();
+    const { mutateAsync: createUserAccount, isPending: isCreatingAccount } = useCreateUserAccount();
 
-    const { mutateAsync: signInAccount, isLoading: isSignIn } = userSignInAccount();
+    const { mutateAsync: signInAccount, isPending: isSignIn } = useSignInAccount();
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof SignupValidation>>({
@@ -47,7 +50,7 @@ const SignupForm = () => {
         const newUser = await createUserAccount(values);
         if (!newUser) {
             return toast({
-                title: 'sign up failed, please try again.'
+                title: 'already have an account, please try sign in.'
             })
         }
 
@@ -60,7 +63,16 @@ const SignupForm = () => {
                 title: 'sign in failed, please try again.'
             })
         }
-
+        const isLoggedIn = await checkAuthUser();
+  
+        if(isLoggedIn) {
+            form.reset();
+            navigate('/');
+        } else {
+            return toast({
+                title: 'sign up failed, please try again.'
+            })
+        }
         // ✅ This will be type-safe and validated.
         console.log(newUser);
     }
@@ -127,13 +139,13 @@ const SignupForm = () => {
                         )}
                     />
                     <Button type="submit" className='shad-button_primary'>
-                        {isCreatingUser ? (
+                        {isCreatingAccount ? (
                             <div className='flex-center gap-2'> <Loader />Loading....</div>
                         ) : "sign up"}
                     </Button>
                     <p className='mt-2 flex-center tex-light-2 text-small-regular'>
                         Already have an account ?,
-                        <Link to='./SigninForm.tsx' className="text-primary-500 text-small-semibold ml-1"> Log in.</Link>
+                        <Link to='./Sign-in' className="text-primary-500 text-small-semibold ml-1"> Log in.</Link>
                     </p>
                 </form>
             </div>

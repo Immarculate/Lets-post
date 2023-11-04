@@ -137,6 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     try {
       const currentAccount = await getCurrentUser();
+      console.log({currentAccount})
       if (currentAccount) {
         setUser({
           id: currentAccount.$id,
@@ -147,7 +148,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           bio: currentAccount.bio,
         });
         setIsAuthenticated(true);
-
+          // console.log({isAuthenticated});
         return true;
       } 
       return false;

@@ -1,4 +1,4 @@
-import SigninForm from "./_auth/Forms/SignupForm";
+import SigninForm from "./_auth/Forms/SigninForm";
 import SignupForm from "./_auth/Forms/SignupForm";
 import { Home } from "./_root/Pages";
 import "./globals.css";
@@ -14,8 +14,8 @@ function App() {
       <Routes>
         {/* public route */}
         <Route element={<AuthLayout />}>
-          <Route path="signin" element={<SigninForm />} />
-          <Route path="signup" element={<SignupForm />} />
+        <Route path="/sign-in" element={<SigninForm />} />
+          <Route path="/sign-up" element={<SignupForm />} />
         </Route>
 
         {/* private route */}
