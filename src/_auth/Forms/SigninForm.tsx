@@ -32,26 +32,16 @@ const SigninForm = () => {
   const handleSignin = async (user: z.infer<typeof SigninValidation>) => {
     const session = await signInAccount(user);
 
-    console.log({session});
+    console.log({ session });
 
     if (!session) {
       toast({ title: "Login failed. Please try again." });
-      
+
       return;
     }
-   
-   
-    // async function delayedCheckAuth() {
-    //   await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
-    //   const isLoggedIn = await checkAuthUser();
-    //   // Now, you can use the 'isLoggedIn' variable
-    // }
-    
-    // delayedCheckAuth();
-     const isLoggedIn = await checkAuthUser();
 
-    console.log({isLoggedIn});
 
+    const isLoggedIn = await checkAuthUser();
 
     if (isLoggedIn) {
       form.reset();
@@ -59,7 +49,7 @@ const SigninForm = () => {
       navigate("/");
     } else {
       toast({ title: "Login failed. Please try again.", });
-      
+
       return;
     }
   };
