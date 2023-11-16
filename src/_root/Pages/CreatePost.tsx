@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import PostForm from '@/components/forms/postForm';
 
 
@@ -13,7 +13,7 @@ const CreatePost = () => {
             height={36} />
             <p className='h3-bold md:h2-bold text-left w-full'>Create post</p>
          </div>
-         <PostForm />
+         <PostForm action="create"/>
       </div>
     </div>
   );
