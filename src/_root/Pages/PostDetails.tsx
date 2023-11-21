@@ -2,15 +2,22 @@ import Loader from '@/components/shared/Loader';
 import PostStats from '@/components/shared/PostStats';
 import { Button } from '@/components/ui/button';
 import { useUserContext } from '@/context/authContext';
-import { useGetPostById } from '@/lib/react-query/queriesandmutations'
+import { useDeletePost, useGetPostById } from '@/lib/react-query/queriesandmutations'
 import { formatDateString } from '@/lib/utils';
 import { Link, useParams } from 'react-router-dom';
 function PostDetails() {
   const { id } = useParams();
   const { user } = useUserContext();
 
+  console.log({id})
+
   const { data: post, isPending } = useGetPostById(id || "");
-  const handleDeletePost = () => {};
+  const { mutate: deletePost } = useDeletePost();
+  
+  const handleDeletePost = () => {
+    deletePost({ postId: id, imageId: post?.imageId });
+    navigate(-1);
+  };
 
   return (
     <div className='post_details-container'>
@@ -41,7 +48,7 @@ function PostDetails() {
               </Link>
 
               <div className='flex-center'>
-              <Link to={`/update-post/${post?.id}`} className={`${user.id !== post?.creator.$id && "hidden"}`}>
+              <Link to={`/update-post/${post?.$id}`} className={`${user.id !== post?.creator.$id && "hidden"}`}>
                     <img src="/Assets/icons/edit.svg" alt="update" width={24} height={24} />
                 </Link>
                 <Button
@@ -73,9 +80,9 @@ function PostDetails() {
                 ))}
               </ul>
             </div>
-            {/* <div className="w-full">
+            <div className="w-full">
                <PostStats post={post} userId={user.id} />
-             </div> */}
+             </div>
           </div>
         </div>
       )}
